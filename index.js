@@ -99,6 +99,8 @@ function handleItemClick(item) {
     updateCartItemUI(state.cart[index]);
     updateTotal()
 
+    updateTotal()
+
   } else {
     item.quantity = 1
     state.cart.push(item)
