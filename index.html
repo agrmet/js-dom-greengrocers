@@ -15,6 +15,12 @@
       <div class = "store--filter-item-list">
         <input type="text" id="filterInput" onkeyup="renderGroceries()" placeholder="filter based on type">
       </div>
+      <label for="sortOptions">Sort By:</label>
+      <select id="sortOptions">
+        <option value="asc">Alphabetically (A-Z)</option>
+        <option value="desc">Alphabetically (Z-A)</option>
+        <option value="price">Price</option>
+      </select>
       <ul class="item-list store--item-list">
         <!-- Take a look at store-item.html -->
       </ul>

@@ -96,17 +96,39 @@ function handleItemClick(item) {
   if (index !== -1) {
     state.cart[index].quantity++
     console.log(state.cart[index]);
-    
     updateCartItemUI(state.cart[index]);
+    updateTotal()
+
   } else {
     item.quantity = 1
     state.cart.push(item)
     addToCartItemUI(item)
+    updateTotal()
+
   }
 }
 
+function updateTotal() {
+  const total = document.querySelector('.total-number')
+  if (!total) {
+    console.log("Total not found");
+    return
+  }
+
+  let sum
+
+  for (let index = 0; index < state.cart.length; index++) {
+    const element = state.cart[index]
+    sum += element.price
+  }
+  console.log(sum);
+  
+  total.textContent = `£${sum}`
+}
+
 function updateCartItemUI(item) {
-  const cartItemElement = cartItemList.querySelector(`[data-id="${item.id}"]`);
+  const cartItemElement = cartItemList.querySelector(`[data-id="${item.id}"]`)
+  updateTotal()
 
   if (cartItemElement) {
     const quantitySpan = cartItemElement.querySelector(".quantity-text");
@@ -120,33 +142,17 @@ function updateCartItemUI(item) {
 
 function addToCartItemUI(item) {
   el = document.createElement("li")
-  img = document.createElement("img")
+  img = createImageElement(item);
+  removeButton = removeButtonElement(item);
   p = document.createElement("p")
-  removeButton = document.createElement("button")
+  addButton = createAddButtonElement(item);
   span = document.createElement("span")
-  addButton = document.createElement("button")
   
-  img.setAttribute("class", "cart--item-icon")
-  img.setAttribute("src", `./assets/icons/${item.id}.svg`)
-  img.setAttribute("alt", item.name)
-
   p.textContent = item.name
-
-  removeButton.setAttribute("class", "quantity-btn remove-btn center")
-  removeButton.textContent = "-"
-  removeButton.addEventListener("click", () =>{
-    handleCartQuantityRemoveClick(item)
-  })
-
+  
   span.setAttribute("class", "quantity-text center")
   span.textContent = item.quantity
-
-  addButton.setAttribute("class", "quantity-btn add-btn center")
-  addButton.textContent = "+"
-  addButton.addEventListener("click", () => {
-    handleCartQuantityAddClick(item)
-  })
-
+  
   el.setAttribute("data-id", item.id)
   el.appendChild(img)
   el.appendChild(p)
@@ -157,12 +163,61 @@ function addToCartItemUI(item) {
   cartItemList.appendChild(el)
 }
 
+function createAddButtonElement(item) {
+  addButton = document.createElement("button");
+  addButton.setAttribute("class", "quantity-btn add-btn center");
+  addButton.textContent = "+";
+  addButton.addEventListener("click", () => {
+    handleCartQuantityAddClick(item);
+  });
+  return addButton
+}
+
+function createImageElement(item) {
+  img = document.createElement("img");
+  img.setAttribute("class", "cart--item-icon");
+  img.setAttribute("src", `./assets/icons/${item.id}.svg`);
+  img.setAttribute("alt", item.name);
+  return img
+}
+
+function removeButtonElement(item) {
+  removeButton = document.createElement("button");
+  removeButton.setAttribute("class", "quantity-btn remove-btn center");
+  removeButton.textContent = "-";
+  removeButton.addEventListener("click", () => {
+    handleCartQuantityRemoveClick(item);
+  });
+  return removeButton
+}
+
 function renderGroceries() {
   storeItemList.innerHTML = '';
   const filterInput = document.getElementById("filterInput").value.toLowerCase();
-  
+
+  const sortValue = document.getElementById("sortOptions").value
+ 
   const filteredItems = state.items.filter((item) => item.type.includes(filterInput))
 
+  switch (sortValue) {
+    case 'asc':
+      filteredItems.sort((item1, item2) => item1.name.localeCompare(item2.name))
+      console.log("Ascending");
+      break;
+
+    case 'desc':
+      filteredItems.sort((item1, item2) => item2.name.localeCompare(item1.name))
+      console.log("Descending");
+      break;
+
+    case 'price':
+      filteredItems.sort((item1, item2) => item1.price - item2.price)
+      console.log("Price");
+      break;
+
+    default:
+      break;
+  }
   
   filteredItems.map((item) => {
     el = document.createElement("li")
@@ -188,4 +243,7 @@ function renderGroceries() {
     storeItemList.appendChild(el)
   })
 }
+document.getElementById('sortOptions').addEventListener('change', () => {
+  renderGroceries()
+})
 renderGroceries();
