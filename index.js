@@ -158,8 +158,13 @@ function addToCartItemUI(item) {
 }
 
 function renderGroceries() {
-  state.items.map((item) => {
-    console.log(item)
+  storeItemList.innerHTML = '';
+  const filterInput = document.getElementById("filterInput").value.toLowerCase();
+  
+  const filteredItems = state.items.filter((item) => item.type.includes(filterInput))
+
+  
+  filteredItems.map((item) => {
     el = document.createElement("li")
     div = document.createElement("div")
     button = document.createElement("button")

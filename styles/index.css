@@ -35,6 +35,15 @@ button {
   text-align: center;
 }
 
+#store .store--filter-item-list {
+  text-align: center;
+  background-position: 10px 12px; /* Position the search icon */
+  width: 100%; /* Full-width */
+  font-size: 16px; /* Increase font-size */
+  margin-bottom: 12px; /* Add some space below the input */
+}
+
+
 .store--item-list {
   display: grid;
   grid-template-columns: repeat(4, 125px);
